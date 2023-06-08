@@ -1,2 +1,2 @@
 ### Background
-This is a reimplementation of Anderson's method for partitioning variance to a grouping variable using a permutational multivariate analysis of variance [Anderson, 2001](https://ecoevol.ufg.br/adrimelo/div/Anderson-2001-AustEcol_non-parametric_manova.pdf).
+This is a reimplementation of Anderson's method for partitioning variance to a grouping variable using a permutational multivariate analysis of variance [Anderson, 2001](https://ecoevol.ufg.br/adrimelo/div/Anderson-2001-AustEcol_non-parametric_manova.pdf).  It doesn't work that well yet, but it's getting there.  I still need to complete the functions that compute the within-group sum of squares, calculate the pseudo F-statistic, and determine significance using a random permutation method.
