@@ -79,6 +79,10 @@ ssa <- function(ss_t, ss_w) {
   return(ss_t - ss_w)
 }
 
+psuedo_f_ratio <- function(ss_a, ss_w, a, N) {
+  return((ss_a/(a-1))/(ss_w/(N-a)))
+}
+
 bc_mat <- bray_curtis(dune)
 ss_total <- sst(bc_mat)
 ss_total
@@ -93,3 +97,6 @@ ss_within
 
 ss_between <- ssa(ss_total, ss_within)
 ss_between
+
+f_ratio <- psuedo_f_ratio(ss_between, ss_within, 4, 20)
+f_ratio
