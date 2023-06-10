@@ -44,14 +44,52 @@ sst <- function(mat) {
 }
 
 ssw <- function(mat) {
+  grps <- sort(unique(colnames(mat)))
+  n_grps <- length(grps)
+  
+  l <- as.list(rep(0, n_grps))
+  names(l) <- grps
+  
+  c <- as.list(rep(0, n_grps))
+  names(c) <- grps
+  
   n <- nrow(mat)
-  d_sqr <- 0
+  grp_i <- ''
+  grp_j <- ''
   for(i in 1:n) {
     end <- i
+    grp_i <- colnames(mat)[i]
+    c[[grp_i]] <- c[[grp_i]] + 1
     for(j in 1:end) {
-      d_sqr <- d_sqr + mat[i,j]^2
+      grp_i <- colnames(mat)[i]
+      grp_j <- colnames(mat)[j]
+      if(grp_i == grp_j) {
+        l[[grp_i]] <- l[[grp_i]] + mat[i,j]^2
+      }
     }
   }
-  ss_w <- d_sqr/n
-  return(ss_w)
+  ss_w <- 0
+  for(k in 1:n_grps) {
+    ss_w <- ss_w + l[[k]]/c[[k]]
+  }
+  return(ss_w[[1]])
 }
+
+ssa <- function(ss_t, ss_w) {
+  return(ss_t - ss_w)
+}
+
+bc_mat <- bray_curtis(dune)
+ss_total <- sst(bc_mat)
+ss_total
+
+grp <- dune.env$Management
+grp
+
+colnames(bc_mat) <- grp
+
+ss_within <- ssw(bc_mat)
+ss_within
+
+ss_between <- ssa(ss_total, ss_within)
+ss_between
