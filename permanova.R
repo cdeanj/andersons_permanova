@@ -1,12 +1,5 @@
-library(vegan)
-
 data(dune)
 data(dune.env)
-
-bc_dist <- vegan::vegdist(dune, method = "bray")
-
-pnova <- adonis2(bc_dist ~ Management, data = dune.env)
-pnova
 
 bray_curtis <- function(mat) {
   nr <- nrow(mat)
@@ -87,10 +80,28 @@ r_squared <- function(ss_w, ss_t) {
   return(1-(ss_w/ss_t))
 }
 
+permutation_test <- function(mat, perms) {
+  f_pi <- c()
+  col_labs <- colnames(mat)
+  for(i in 1:perms) {
+    cols <- sample(col_labs)
+    permuted_matrix <- mat
+    colnames(permuted_matrix) <- cols
+    pseudo_ss_t <- sst(permuted_matrix)
+    pseudo_ss_w <- ssw(permuted_matrix)
+    pseudo_ss_a <- ssa(pseudo_ss_t, pseudo_ss_w)
+    pseudo_f <- psuedo_f_ratio(pseudo_ss_a, pseudo_ss_w, 4, 20)
+    f_pi <- c(f_pi, pseudo_f)
+  }
+  return(f_pi)
+}
 
-
+p_value <- function(f_pi_list, f_ratio, perms) {
+  return(length(which(f_pi_list > f_ratio))/perms)
+}
 
 bc_mat <- bray_curtis(dune)
+
 ss_total <- sst(bc_mat)
 ss_total
 
@@ -110,3 +121,6 @@ f_ratio
 
 r2 <- r_squared(ss_within, ss_total)
 r2
+
+f_pii <- permutation_test(bc_mat, 1000)
+p_value(f_pii, f_ratio, 1000)
